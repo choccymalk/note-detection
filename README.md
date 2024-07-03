@@ -1,7 +1,7 @@
 how to put on robot\
 on coprocessor:\
 run these commands\
-git clone https://github.com/choccymalk/note-detection.git\
+git clone https://github.com/choccymalk/note-detection.git \
 cd note-detection\
 pip install -r requirements.txt\
 sudo ufw allow 5800\
