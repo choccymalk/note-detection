@@ -10,7 +10,7 @@ public class UDPServer {
         try {
             socket = new DatagramSocket(5800);
             byte[] buffer = new byte[1024];
-            System.out.println("UDP server up and listening on port 12345");
+            System.out.println("UDP server up and listening on port 5800");
 
             final DatagramSocket finalSocket = socket;  // Copy the socket into a final variable
 
