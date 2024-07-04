@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 
 public class UDPServer {
     public static void main(String[] args) {
-        int port = 5800;
+        int port = 5806;
         byte[] buffer = new byte[65507];
 
         try (DatagramSocket socket = new DatagramSocket(port)) {

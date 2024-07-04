@@ -18,7 +18,7 @@ if not video_capture.isOpened():
 
 # UDP server address
 server_ip = "192.168.1.114"
-server_port = 5800
+server_port = 5806
 server_address = (server_ip, server_port)
 
 # Initialize UDP socket
