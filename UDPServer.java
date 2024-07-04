@@ -1,51 +1,59 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.nio.charset.StandardCharsets;
 
 public class UDPServer {
-
-    private static volatile boolean running = true;
-
     public static void main(String[] args) {
-        DatagramSocket socket = null;
-        try {
-            socket = new DatagramSocket(5806);
-            byte[] buffer = new byte[1024];
-            System.out.println("UDP server up and listening on port 5806");
+        int port = 5800;
+        byte[] buffer = new byte[65507];
 
-            final DatagramSocket finalSocket = socket;  // Copy the socket into a final variable
+        try (DatagramSocket socket = new DatagramSocket(port)) {
+            System.out.println("UDP server up and listening on port " + port);
 
-            // Start thread for receiving messages
-            Thread receiveThread = new Thread(() -> {
-                try {
-                    while (running) {
-                        byte[] receiveBuffer = new byte[1024];
-                        DatagramPacket request = new DatagramPacket(receiveBuffer, receiveBuffer.length);
-                        finalSocket.receive(request);
-                        String message = new String(request.getData(), 0, request.getLength());
-                        System.out.println(/* "Received: " + */message/*+ " from " + request.getAddress()*/);
-                    }
-                } catch (Exception e) {
-                    if (running) {
-                        e.printStackTrace();
+            while (true) {
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                socket.receive(packet);
+
+                String received = new String(packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8);
+                System.out.println("Received detections from client:");
+                System.out.println(received);
+
+                // Parse the received string into individual rows and columns
+                String[] rows = received.split("\n");
+                String header = rows[0];
+                String[] columns = header.split(",");
+
+                for (int i = 1; i < rows.length; i++) {
+                    String[] values = rows[i].split(",");
+
+                    if (values.length == columns.length) {
+                        // Assuming the data format is known and consistent
+                        double xmin = Double.parseDouble(values[0]);
+                        double ymin = Double.parseDouble(values[1]);
+                        double xmax = Double.parseDouble(values[2]);
+                        double ymax = Double.parseDouble(values[3]);
+                        double confidence = Double.parseDouble(values[4]);
+                        int cls = Integer.parseInt(values[5]);
+                        String name = values[6];
+
+                        // Print the values
+                        System.out.println("Row " + i + ":");
+                        System.out.println("xmin: " + xmin);
+                        System.out.println("ymin: " + ymin);
+                        System.out.println("xmax: " + xmax);
+                        System.out.println("ymax: " + ymax);
+                        System.out.println("confidence: " + confidence);
+                        System.out.println("class: " + cls);
+                        System.out.println("name: " + name);
+
+                        // Here you can store or process the variables as needed
+                    } else {
+                        System.out.println("Row " + i + " has an incorrect number of columns.");
                     }
                 }
-            });
-            receiveThread.start();
-
-            // Wait for the server to be terminated (press Enter to terminate)
-            System.out.println("Press Enter to stop the server...");
-            System.in.read();
-            running = false;
-
-            // Wait for the receive thread to finish
-            receiveThread.join();
-
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (socket != null && !socket.isClosed()) {
-                socket.close();
-            }
         }
     }
 }
