@@ -12,4 +12,4 @@ _i don't know_\
 how to run it on startup ‼️ ‼️ (ubuntu only(i think)) \
 crontab -e -u .the username that you use to login. \
 once youre inside the crontab file, add this. \
-@reboot python /home/username/note-detection/UDPClient.py \
+@reboot python /home/username/note-detection/UDPClient.py 
