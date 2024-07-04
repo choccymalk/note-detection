@@ -6,7 +6,10 @@ cd note-detection\
 pip install -r requirements.txt\
 sudo ufw allow 5806\
 python UDPClient.py\
-make a cron job to run the last command on boot\
 the data is sent and received as a string\
 on rio:\
-_i don't know_
+_i don't know_\
+how to run it on startup ‼️ ‼️ (ubuntu only(i think)) \
+crontab -e -u .the username that you use to login. \
+once youre inside the crontab file, add this. \
+@reboot python /home/username/note-detection/UDPClient.py \
