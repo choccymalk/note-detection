@@ -18,7 +18,7 @@ if not video_capture.isOpened():
 
 # UDP server address
 server_ip = "192.168.1.114"
-server_port = 5806
+server_port = 5800
 server_address = (server_ip, server_port)
 
 # Initialize UDP socket
@@ -40,11 +40,27 @@ try:
 
         # Send results only if DataFrame is not empty
         if not detections_df.empty:
-            string_df = detections_df.to_string(index=False)
-            sock.sendto(string_df.encode(), server_address)
-            print("Sent detections to server:")
-            print(detections_df)
+            # Convert DataFrame to CSV string
+            csv_string = detections_df.to_csv(index=False)
 
+            # Ensure the string is within the UDP packet size limit (usually 65,507 bytes)
+            if len(csv_string.encode()) <= 65507:
+                sock.sendto(csv_string.encode(), server_address)
+                print("Sent detections to server:")
+                print(detections_df)
+            else:
+                print("DataFrame too large to send over UDP")
+
+        # Display the resulting frame with bounding boxes and labels
+
+        # Press 'q' to exit the loop
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+except KeyboardInterrupt:
+    print("Interrupted by user.")
 
 finally:
-    exit()
+    # When everything is done, release the capture and close the socket
+    video_capture.release()
+    sock.close()
