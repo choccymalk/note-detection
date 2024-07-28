@@ -1,5 +1,4 @@
-# photonvision has this built in
-### deprecated \
+# deprecated, photonvision has this built in
 how to put on robot\
 on coprocessor:\
 run these commands\
