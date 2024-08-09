@@ -9,7 +9,7 @@ sudo ufw allow 5806\
 python UDPClient.py\
 the data is sent and received as a string\
 on rio:\
-_i don't know_\
+look in the "roborio" directory \
 how to run it on startup ‼️ ‼️ (ubuntu only(i think)) \
 crontab -e -u .the username that you use to login. \
 once youre inside the crontab file, add this. \
