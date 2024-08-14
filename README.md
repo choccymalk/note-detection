@@ -1,4 +1,3 @@
-# no longer deprecated
 how to put on robot\
 on coprocessor:\
 run these commands\
@@ -7,10 +6,10 @@ cd note-detection\
 pip install -r requirements.txt\
 sudo ufw allow 5806\
 python UDPClient.py\
-the data is sent and received as a string\
+the data is sent and received as a pandas dataframe\
 on rio:\
 look in the "roborio" directory \
-how to run it on startup ‼️ ‼️ (ubuntu only(i think)) \
-crontab -e -u .the username that you use to login. \
+how to run it on startup (ubuntu only(i think)) \
+crontab -e -u username \
 once youre inside the crontab file, add this. \
 @reboot python /home/username/note-detection/UDPClient.py 
