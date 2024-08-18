@@ -7,7 +7,7 @@ import torch
 import socket
 
 # Load YOLOv5 model
-model = torch.hub.load('.', 'custom', path='note_detect.pt', source='local')
+model = torch.hub.load('.', 'custom', path='note_detect_v2.pt', source='local')
 
 # Initialize video capture (0 is the default camera)
 video_capture = cv2.VideoCapture(0)
