@@ -88,10 +88,11 @@ public class Robot extends TimedRobot {
         final double FOV_X = Math.toRadians(60.0); // Horizontal field of view in radians
         final double FOV_Y = Math.toRadians(45.0); // Vertical field of view in radians
 
-        // Camera coordinates
+        // Camera coordinates and rotation
         final double CAMERA_X = 8.0;
         final double CAMERA_Y = 10.5;
         final double CAMERA_Z = 24.0;
+        final double CAMERA_ROTATION_DOWN = Math.toRadians(-35.0); // Camera rotated down by -35 degrees
 
         int port = 5806;
         byte[] buffer = new byte[65507];
@@ -148,10 +149,18 @@ public class Robot extends TimedRobot {
                         double directionY = Math.tan(normCenterY * FOV_Y / 2.0);
                         double directionZ = 1.0; // Assuming the camera is looking straight along the Z-axis
 
+                        // Apply the camera's downward rotation
+                        double cosTheta = Math.cos(CAMERA_ROTATION_DOWN);
+                        double sinTheta = Math.sin(CAMERA_ROTATION_DOWN);
+
+                        // Rotate the direction vector by the camera's pitch (downward rotation)
+                        double rotatedDirectionY = cosTheta * directionY - sinTheta * directionZ;
+                        double rotatedDirectionZ = sinTheta * directionY + cosTheta * directionZ;
+
                         // Apply the camera's position
                         double objectX = CAMERA_X + directionX;
-                        double objectY = CAMERA_Y + directionY;
-                        double objectZ = CAMERA_Z + directionZ;
+                        double objectY = CAMERA_Y + rotatedDirectionY;
+                        double objectZ = CAMERA_Z + rotatedDirectionZ;
 
                         // Calculate the vector from the camera to the object
                         double relativeX = objectX - CAMERA_X;
