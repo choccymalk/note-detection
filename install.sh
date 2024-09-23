@@ -160,9 +160,14 @@ apt-get install --yes unzip
 wget https://github.com/choccymalk/note-detection/archive/refs/heads/main.zip
 mkdir -p /opt/note-detection
 unzip main.zip -d /opt/note-detection
-/usr/bin/pip3 install -r /opt/note-detection/requirements.txt -t /opt/note-detection/
 rm -rf $HOME/note-detection-temp
 echo "Downloaded latest stable release."
+
+echo "Installing python packages..."
+/usr/bin/pip3 install -r /opt/note-detection/requirements.txt -t /opt/note-detection/
+/usr/bin/pip3 install pickle -t /opt/note-detection/
+/usr/bin/pip3 install dill -t /opt/note-detection/
+echo "Finished installing packages."
 
 echo "Creating systemd service..."
 
