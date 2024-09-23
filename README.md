@@ -1,6 +1,16 @@
-how to put on robot\
-on coprocessor:\
-run these commands
+## Installation Guide
+### On coprocessor:
+#### Using the Installation Script (recommended)
+```
+wget https://raw.githubusercontent.com/choccymalk/note-detection/refs/heads/main/install.sh
+```
+```
+sudo chmod +x ./install.sh
+```
+```
+./install.sh
+```
+#### Manual Installation
 ```
 git clone https://github.com/choccymalk/note-detection.git
 ```
@@ -8,13 +18,13 @@ git clone https://github.com/choccymalk/note-detection.git
 cd note-detection
 ```
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 ```
 sudo ufw allow 5806
 ```
 ```
-python UDPClient.py
+python3 UDPClient.py
 ```
 the data is sent and received as a pandas dataframe\
 how to run it on startup (ubuntu only(i think)) 
