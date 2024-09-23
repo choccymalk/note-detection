@@ -101,6 +101,14 @@ echo "Installing cpufrequtils..."
 apt-get install --yes cpufrequtils
 echo "cpufrequtils installation complete."
 
+echo "Installing ufw..."
+apt-get install --yes ufw
+echo "ufw installation complete."
+
+echo "Creating firewall rules"
+ufw allow 5806
+echo "Updated firewall rules"
+
 echo "Setting cpufrequtils to performance mode"
 if [ -f /etc/default/cpufrequtils ]; then
     sed -i -e 's/^#\?GOVERNOR=.*$/GOVERNOR=performance/' /etc/default/cpufrequtils
