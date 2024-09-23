@@ -35,5 +35,5 @@ once youre inside the crontab file, add this
 ```
 @reboot python /home/username/note-detection/UDPClient.py 
 ```
-on rio:\
+### On roborio:
 look in the "roborio" directory 
