@@ -14,6 +14,7 @@ help() {
   echo "  -h        Display this help message."
   echo "  -m        Install and configure NetworkManager (Ubuntu only)."
   echo "  -q        Silent install, automatically accepts all defaults. For non-interactive use."
+  echo "  -u        Upgrade to most recent version."
   echo
 }
 
@@ -29,6 +30,8 @@ while getopts ":hmnq" name; do
       ;;
     q) QUIET="true"
       ;;
+    u) UPGRADE="true"
+      ;;
     \?)
       echo "Error: Invalid option -- '$OPTARG'"
       echo "Try './install.sh -h' for more information."
@@ -41,6 +44,10 @@ shift $(($OPTIND -1))
 if [ "$(id -u)" != "0" ]; then
    echo "This script must be run as root" 1>&2
    exit 1
+fi
+
+if [ "$UPGRADE" = "true" ]; then
+  rm -rf /opt/note-detection
 fi
 
 ARCH=$(uname -m)
@@ -81,6 +88,10 @@ fi
 echo "Update package list"
 apt-get update
 
+echo "Installing build-essential..."
+apt-get install --yes build-essential
+echo "build-essential installation complete."
+
 echo "Installing wget..."
 apt-get install --yes wget
 echo "wget installation complete."
@@ -94,7 +105,17 @@ apt-get install --yes avahi-daemon
 echo "avahi-daemon installation complete."
 
 echo "installing python3..."
-apt-get install --yes python3
+mkdir $HOME/note-detection-temp
+cd $HOME/note-detection-temp
+sudo apt-get install libssl-dev openssl
+wget https://www.python.org/ftp/python/3.9.9/Python-3.9.9.tgz
+tar xzvf Python-3.9.9.tgz
+cd Python-3.9.9
+./configure
+make
+sudo make install
+cd $HOME/
+rm -rf $HOME/note-detection-temp
 echo "python3 installation complete."
 
 echo "installing pip3..."
@@ -164,6 +185,7 @@ apt-get install --yes unzip
 wget https://github.com/choccymalk/note-detection/archive/refs/heads/main.zip
 mkdir -p /opt/note-detection
 unzip main.zip -d /opt/note-detection
+cd $HOME/
 rm -rf $HOME/note-detection-temp
 cd /opt/note-detection/note-detection-main
 echo "Downloaded latest stable release."
