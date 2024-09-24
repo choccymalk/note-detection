@@ -169,8 +169,8 @@ cd /opt/note-detection/note-detection-main
 echo "Downloaded latest stable release."
 
 echo "Installing python packages..."
-/usr/bin/pip3 install -r /opt/note-detection/note-detection-main/requirements.txt -t /opt/note-detection/note-detection-main/
-/usr/bin/pip3 install flask --break-system-packages -t /opt/note-detection/note-detection-main/
+/usr/bin/pip3 install -r /opt/note-detection/note-detection-main/requirements.txt
+/usr/bin/pip3 install flask --break-system-packages
 echo "Finished installing packages."
 
 echo "Creating systemd service..."
