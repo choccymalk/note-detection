@@ -8,7 +8,7 @@ wget https://raw.githubusercontent.com/choccymalk/note-detection/refs/heads/main
 sudo chmod +x ./install.sh
 ```
 ```
-./install.sh
+sudo ./install.sh
 ```
 #### Manual Installation
 ```
