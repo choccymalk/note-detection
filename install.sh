@@ -107,13 +107,13 @@ echo "avahi-daemon installation complete."
 echo "installing python3..."
 mkdir $HOME/note-detection-temp
 cd $HOME/note-detection-temp
-sudo apt-get install libssl-dev openssl
+apt-get install libssl-dev openssl
 wget https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz
 tar xzvf Python-3.11.0.tgz
 cd Python-3.11.0
 ./configure
 make
-sudo make install
+make install
 cd $HOME/
 rm -rf $HOME/note-detection-temp
 echo "python3 installation complete."
@@ -131,7 +131,17 @@ apt-get install --yes ufw
 echo "ufw installation complete."
 
 echo "Creating firewall rules"
+ufw allow 5000
+ufw allow 5800
+ufw allow 5801
+ufw allow 5802
+ufw allow 5803
+ufw allow 5804
+ufw allow 5805
 ufw allow 5806
+ufw allow 5807
+ufw allow 5808
+ufw allow 5809
 echo "Updated firewall rules"
 
 echo "Setting cpufrequtils to performance mode"
@@ -191,8 +201,8 @@ cd /opt/note-detection/note-detection-main
 echo "Downloaded latest stable release."
 
 echo "Installing python packages..."
-/usr/bin/pip3 install -r /opt/note-detection/note-detection-main/requirements.txt
-/usr/bin/pip3 install flask --break-system-packages
+#/usr/bin/pip3 install -r /opt/note-detection/note-detection-main/requirements.txt
+apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-flask python3-pygrabber python3-dill python3-pickle 
 echo "Finished installing packages."
 
 echo "Creating systemd service..."
@@ -242,3 +252,4 @@ systemctl enable note-detection.service
 echo "Created systemd service."
 
 echo "Installation successful!"
+echo "Please restart your device."
