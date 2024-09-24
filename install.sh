@@ -108,9 +108,9 @@ echo "installing python3..."
 mkdir $HOME/note-detection-temp
 cd $HOME/note-detection-temp
 sudo apt-get install libssl-dev openssl
-wget https://www.python.org/ftp/python/3.9.9/Python-3.9.9.tgz
-tar xzvf Python-3.9.9.tgz
-cd Python-3.9.9
+wget https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz
+tar xzvf Python-3.11.0.tgz
+cd Python-3.11.0
 ./configure
 make
 sudo make install
