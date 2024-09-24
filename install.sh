@@ -98,7 +98,7 @@ apt-get install --yes python3
 echo "python3 installation complete."
 
 echo "installing pip3..."
-apt-get install --yes pip3
+apt-get install --yes python3-pip
 echo "pip3 installation complete."
 
 echo "Installing cpufrequtils..."
