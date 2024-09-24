@@ -165,6 +165,7 @@ wget https://github.com/choccymalk/note-detection/archive/refs/heads/main.zip
 mkdir -p /opt/note-detection
 unzip main.zip -d /opt/note-detection
 rm -rf $HOME/note-detection-temp
+cd /opt/note-detection/note-detection-main
 echo "Downloaded latest stable release."
 
 echo "Installing python packages..."
