@@ -47,3 +47,8 @@ setuptools>=65.5.1 # Snyk vulnerability fix
 # mss  # screenshots
 # albumentations>=1.0.3
 # pycocotools>=2.0.6  # COCO mAP
+flask-socketio
+pygrabber
+flask
+pickle
+dill

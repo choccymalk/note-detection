@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config Editor</title>
+    <script src="socket.io.min.js"></script>
+    <style>
+        #videoCanvas {
+            border: 0px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Configuration Settings</h1>
+    <form action="/update_config" method="POST">
+        <!-- Dropdown for camera selection -->
+        <label for="camera_index">Select Camera:</label>
+        <select id="camera_index" name="camera_index">
+            {% for index, camera_name in available_cameras %}
+                <option value="{{ index }}" {% if index == config['camera_index'] %}selected{% endif %}>
+                    Camera {{ index }}: {{ camera_name }}
+                </option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+    <canvas id="videoCanvas" width="640" height="480"></canvas>
+    <script>
+        const canvas = document.getElementById('videoCanvas');
+        const context = canvas.getContext('2d');
+        const socket = io.connect();
+
+        // Function to handle incoming video frames
+        socket.on('video_frame', function (data) {
+            const img = new Image();
+            img.onload = function () {
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            img.src = 'data:image/jpeg;base64,' + btoa(String.fromCharCode.apply(null, new Uint8Array(data.data)));
+        });
+
+        // Terminate the stream when the user leaves the page
+        window.addEventListener('beforeunload', function () {
+            socket.disconnect(); // Disconnect the socket
+        });
+    </script>
+</body>
+</html>

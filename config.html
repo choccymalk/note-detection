@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config Editor</title>
+</head>
+<body>
+    <h1>Configuration Settings</h1>
+    <form action="/update_config" method="POST">
+        <!-- Dropdown for setting1 -->
+        <label for="setting1">Setting 1:</label>
+        <select id="setting1" name="setting1">
+            {% for option in setting1_options %}
+                <option value="{{ option }}" {% if option == config['setting1'] %}selected{% endif %}>
+                    {{ option }}
+                </option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <!-- Text field for setting2 -->
+        <label for="setting2">Setting 2:</label>
+        <input type="text" id="setting2" name="setting2" value="{{ config['setting2'] }}">
+        <br><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+</body>
+</html>

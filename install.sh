@@ -81,6 +81,10 @@ fi
 echo "Update package list"
 apt-get update
 
+echo "Installing wget..."
+apt-get install --yes wget
+echo "wget installation complete."
+
 echo "Installing curl..."
 apt-get install --yes curl
 echo "curl installation complete."
