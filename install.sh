@@ -168,9 +168,7 @@ rm -rf $HOME/note-detection-temp
 echo "Downloaded latest stable release."
 
 echo "Installing python packages..."
-/usr/bin/pip3 install -r /opt/note-detection/requirements.txt -t /opt/note-detection/
-/usr/bin/pip3 install pickle -t /opt/note-detection/
-/usr/bin/pip3 install dill -t /opt/note-detection/
+/usr/bin/pip3 install -r /opt/note-detection/note-detection-main/requirements.txt -t /opt/note-detection/note-detection-main/
 echo "Finished installing packages."
 
 echo "Creating systemd service..."
@@ -190,14 +188,14 @@ cat > /lib/systemd/system/note-detection.service <<EOF
 Description=Service that runs the note-detection utility
 
 [Service]
-WorkingDirectory=/opt/note-detection
+WorkingDirectory=/opt/note-detection/note-detection-main
 # Run at "nice" -10, which is higher priority than standard
 Nice=-10
 # for non-uniform CPUs, like big.LITTLE, you want to select the big cores
 # look up the right values for your CPU
 # AllowedCPUs=4-7
 
-ExecStart=/usr/bin/python3 /opt/note-detection/UDPClient.py
+ExecStart=/usr/bin/python3 /opt/note-detection/note-detection-main/UDPClient.py
 ExecStop=/bin/systemctl kill note-detection
 Type=simple
 Restart=on-failure
