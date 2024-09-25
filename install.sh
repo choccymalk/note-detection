@@ -21,7 +21,7 @@ help() {
 
 INSTALL_NETWORK_MANAGER="false"
 
-while getopts ":hmnq" name; do
+while getopts ":hmnqup" name; do
   case "$name" in
     h)
       help
