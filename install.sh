@@ -33,7 +33,7 @@ while getopts ":hmnqup" name; do
       ;;
     u) UPGRADE="true"
       ;;
-    p) DO_NOT_INSTALL_PYTHON="true"
+    p) DONOTINSTALLPYTHON="true"
       ;;
     \?)
       echo "Error: Invalid option -- '$OPTARG'"
@@ -107,7 +107,7 @@ echo "Installing avahi-daemon..."
 apt-get install --yes avahi-daemon
 echo "avahi-daemon installation complete."
 
-if [DO_NOT_INSTALL_PYTHON = "false"]; then
+if ["$DONOTINSTALLPYTHON" = "false"]; then
   echo "installing python3..."
   mkdir $HOME/note-detection-temp
   cd $HOME/note-detection-temp
@@ -217,7 +217,7 @@ if [ "$ARCH" = "aarch64" ]; then
   wget http://launchpadlibrarian.net/592814498/python3.9-venv_3.9.12-1_arm64.deb
   dpkg -i python3.9-venv_3.9.12-1_arm64.deb
   cd /opt/note-detection/
-else [ "$ARCH" = "x86_64" ]; then
+else
   cd $HOME/note-detection-temp
   wget http://launchpadlibrarian.net/592777863/python3.9-venv_3.9.12-1_amd64.deb
   dpkg -i python3.9-venv_3.9.12-1_amd64.deb
