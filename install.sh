@@ -212,8 +212,11 @@ cd /opt/note-detection/
 echo "Downloaded latest stable release."
 
 echo "Installing python packages..."
-/usr/bin/pip3 install -r /opt/note-detection/requirements.txt --break-system-packages
+/usr/bin/python3 -m venv /opt/note-detection
+source /opt/note-detection/bin/activate
+/usr/bin/pip3 install -r /opt/note-detection/requirements.txt # --break-system-packages
 #apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-flask python3-pygrabber python3-dill python3-pickle 
+deactivate
 echo "Finished installing packages."
 
 echo "Creating systemd service..."
@@ -228,6 +231,12 @@ if systemctl --quiet is-active note-detection; then
   systemctl reset-failed
 fi
 
+cat > /opt/note-detection/startup.sh <<EOF
+#!/bin/bash
+source /opt/note-detection/bin/activate
+/usr/bin/python3 /opt/note-detection/UDPClient.py
+EOF
+
 cat > /lib/systemd/system/note-detection.service <<EOF
 [Unit]
 Description=Service that runs the note-detection utility
@@ -240,7 +249,7 @@ Nice=-10
 # look up the right values for your CPU
 # AllowedCPUs=4-7
 
-ExecStart=/usr/bin/python3 /opt/note-detection/UDPClient.py
+ExecStart=/opt/note-detection/startup.sh
 ExecStop=/bin/systemctl kill note-detection
 Type=simple
 Restart=on-failure
