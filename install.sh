@@ -15,6 +15,7 @@ help() {
   echo "  -m        Install and configure NetworkManager (Ubuntu only)."
   echo "  -q        Silent install, automatically accepts all defaults. For non-interactive use."
   echo "  -u        Upgrade to most recent version."
+  echo "  -p        Do not install Python. Only use if you already have Python version 3.9 installed."
   echo
 }
 
@@ -31,6 +32,8 @@ while getopts ":hmnq" name; do
     q) QUIET="true"
       ;;
     u) UPGRADE="true"
+      ;;
+    p) DO_NOT_INSTALL_PYTHON="true"
       ;;
     \?)
       echo "Error: Invalid option -- '$OPTARG'"
@@ -104,20 +107,23 @@ echo "Installing avahi-daemon..."
 apt-get install --yes avahi-daemon
 echo "avahi-daemon installation complete."
 
-echo "installing python3..."
-mkdir $HOME/note-detection-temp
-cd $HOME/note-detection-temp
-apt-get install --yes libssl-dev openssl
-wget https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tgz
-tar xzvf Python-3.9.0.tgz
-cd Python-3.9.0
-./configure
-make
-make install
-cd $HOME/
-rm -rf $HOME/note-detection-temp
-echo "python3 installation complete."
-
+if [DO_NOT_INSTALL_PYTHON = "false"]; then
+  echo "installing python3..."
+  mkdir $HOME/note-detection-temp
+  cd $HOME/note-detection-temp
+  apt-get install --yes libssl-dev openssl
+  wget https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tgz
+  tar xzvf Python-3.9.0.tgz
+  cd Python-3.9.0
+  ./configure
+  make
+  make install
+  cd $HOME/
+  rm -rf $HOME/note-detection-temp
+  echo "python3 installation complete."
+else
+  echo "Not installing python3."
+fi
 echo "installing pip3..."
 apt-get install --yes python3-pip
 echo "pip3 installation complete."
