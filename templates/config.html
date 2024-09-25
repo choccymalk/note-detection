@@ -24,7 +24,13 @@
             {% endfor %}
         </select>
         <br><br>
-
+        
+        <!-- Text field for setting2 -->
+        <label for="ipOfRio">IP Address of Roborio:</label>
+        <label for="ipOfRio">Current IP Address: {{config['ipOfRio']}}</label>
+        <input type="text" id="ipOfRio" name="ipOfRio" value="{{ config['ipOfRio'] }}">
+        <br><br>
+        
         <button type="submit">Save Changes</button>
     </form>
     <canvas id="videoCanvas" width="640" height="480"></canvas>

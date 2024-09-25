@@ -15,7 +15,7 @@ socketio = SocketIO(app)
 CONFIG_FILE = 'config.json'
 
 if not os.path.exists(CONFIG_FILE):
-    default_config = {"setting1": "option1", "setting2": "value2", "camera_index": 0}
+    default_config = {"ipOfRio": "10.0.0.2", "camera_index": 0}
     with open(CONFIG_FILE, 'w') as file:
         json.dump(default_config, file, indent=4)
 
@@ -48,14 +48,12 @@ def home():
 # Flask route to handle configuration updates
 @app.route('/update_config', methods=['POST'])
 def update_config():
-    setting1 = request.form.get('setting1')  # Get selected value from dropdown
-    setting2 = request.form.get('setting2')  # Get value from text input
+    ipOfRio = request.form.get('ipOfRio')  # Get value from text input
     camera_index = int(request.form.get('camera_index'))  # Get selected camera index
 
     # Update configuration file with new settings
     config = load_config()
-    config['setting1'] = setting1
-    config['setting2'] = setting2
+    config['ipOfRio'] = ipOfRio
     config['camera_index'] = camera_index
     save_config(config)
 
@@ -71,6 +69,7 @@ def run_yolo_detection():
     # Load configuration and get selected camera index
     config = load_config()
     camera_index = config.get('camera_index', 0)
+    rioIp = config.get('ipOfRio','')
 
     # Initialize video capture with the selected camera index
     video_capture = cv2.VideoCapture(camera_index)
@@ -80,7 +79,7 @@ def run_yolo_detection():
         return
 
     # UDP server address
-    server_ip = "192.168.1.114"
+    server_ip = rioIp
     server_port = 5806
     server_address = (server_ip, server_port)
 
