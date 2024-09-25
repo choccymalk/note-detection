@@ -108,7 +108,7 @@ echo "installing python3..."
 mkdir $HOME/note-detection-temp
 cd $HOME/note-detection-temp
 apt-get install --yes libssl-dev openssl
-wget https://www.python.org/ftp/python/3.11.0/Python-3.9.0.tgz
+wget https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tgz
 tar xzvf Python-3.9.0.tgz
 cd Python-3.9.0
 ./configure
