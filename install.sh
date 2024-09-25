@@ -199,13 +199,14 @@ apt-get install --yes unzip
 wget https://github.com/choccymalk/note-detection/archive/refs/heads/main.zip
 mkdir -p /opt/note-detection
 unzip main.zip -d /opt/note-detection
+mv -r /opt/note-detection/note-detection-main/* /opt/note-detection
 cd $HOME/
 rm -rf $HOME/note-detection-temp
-cd /opt/note-detection/note-detection-main
+cd /opt/note-detection/
 echo "Downloaded latest stable release."
 
 echo "Installing python packages..."
-/usr/bin/pip3 install -r /opt/note-detection/note-detection-main/requirements.txt --break-system-packages
+/usr/bin/pip3 install -r /opt/note-detection/requirements.txt --break-system-packages
 #apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-flask python3-pygrabber python3-dill python3-pickle 
 echo "Finished installing packages."
 
@@ -226,14 +227,14 @@ cat > /lib/systemd/system/note-detection.service <<EOF
 Description=Service that runs the note-detection utility
 
 [Service]
-WorkingDirectory=/opt/note-detection/note-detection-main
+WorkingDirectory=/opt/note-detection/
 # Run at "nice" -10, which is higher priority than standard
 Nice=-10
 # for non-uniform CPUs, like big.LITTLE, you want to select the big cores
 # look up the right values for your CPU
 # AllowedCPUs=4-7
 
-ExecStart=/usr/bin/python3 /opt/note-detection/note-detection-main/UDPClient.py
+ExecStart=/usr/bin/python3 /opt/note-detection/UDPClient.py
 ExecStop=/bin/systemctl kill note-detection
 Type=simple
 Restart=on-failure
