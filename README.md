@@ -10,6 +10,13 @@ sudo chmod +x ./install.sh
 ```
 sudo ./install.sh
 ```
+If this fails, try using "dos2unix" on the install script.
+```
+sudo apt-get install --yes dos2unix
+```
+```
+sudo dos2unix install.sh
+```
 #### Manual Installation
 ```
 git clone https://github.com/choccymalk/note-detection.git
