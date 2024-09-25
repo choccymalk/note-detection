@@ -207,11 +207,22 @@ mkdir -p /opt/note-detection
 unzip main.zip -d /opt/note-detection
 mv /opt/note-detection/note-detection-main/* /opt/note-detection
 cd $HOME/
-rm -rf $HOME/note-detection-temp
 cd /opt/note-detection/
 echo "Downloaded latest stable release."
+#http://launchpadlibrarian.net/592777863/python3.9-venv_3.9.12-1_amd64.deb
 
 echo "Installing python packages..."
+if [ "$ARCH" = "aarch64" ]; then
+  cd $HOME/note-detection-temp
+  wget http://launchpadlibrarian.net/592814498/python3.9-venv_3.9.12-1_arm64.deb
+  dpkg -i python3.9-venv_3.9.12-1_arm64.deb
+  cd /opt/note-detection/
+else [ "$ARCH" = "x86_64" ]; then
+  cd $HOME/note-detection-temp
+  wget http://launchpadlibrarian.net/592777863/python3.9-venv_3.9.12-1_amd64.deb
+  dpkg -i python3.9-venv_3.9.12-1_amd64.deb
+  cd /opt/note-detection/
+fi
 /usr/bin/python3 -m venv /opt/note-detection
 cat > /opt/note-detection/installpypackages.sh <<EOF
 #!/opt/note-detection/bin/python3
@@ -222,7 +233,7 @@ EOF
 #/usr/bin/pip3 install -r /opt/note-detection/requirements.txt # --break-system-packages
 #apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-flask python3-pygrabber python3-dill python3-pickle 
 #deactivate
-chown 777 /opt/note-detection/installpypackages.sh
+chmod 777 /opt/note-detection/installpypackages.sh
 /opt/note-detection/installpypackages.sh
 echo "Finished installing packages."
 
@@ -276,6 +287,6 @@ systemctl daemon-reload
 systemctl enable note-detection.service
 
 echo "Created systemd service."
-
+rm -rf $HOME/note-detection-temp
 echo "Installation successful!"
 echo "Please restart your device."
