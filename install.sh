@@ -107,7 +107,7 @@ echo "avahi-daemon installation complete."
 echo "installing python3..."
 mkdir $HOME/note-detection-temp
 cd $HOME/note-detection-temp
-apt-get install libssl-dev openssl
+apt-get install --yes libssl-dev openssl
 wget https://www.python.org/ftp/python/3.11.0/Python-3.11.0.tgz
 tar xzvf Python-3.11.0.tgz
 cd Python-3.11.0
@@ -129,6 +129,10 @@ echo "cpufrequtils installation complete."
 echo "Installing ufw..."
 apt-get install --yes ufw
 echo "ufw installation complete."
+
+echo "Installing pypi2deb..."
+apt-get install --yes pypi2deb
+echo "pypi2deb installation complete."
 
 echo "Creating firewall rules"
 ufw allow 5000
@@ -201,8 +205,8 @@ cd /opt/note-detection/note-detection-main
 echo "Downloaded latest stable release."
 
 echo "Installing python packages..."
-#/usr/bin/pip3 install -r /opt/note-detection/note-detection-main/requirements.txt
-apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-flask python3-pygrabber python3-dill python3-pickle 
+/usr/bin/pip3 install -r /opt/note-detection/note-detection-main/requirements.txt --break-system-packages
+#apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-flask python3-pygrabber python3-dill python3-pickle 
 echo "Finished installing packages."
 
 echo "Creating systemd service..."
