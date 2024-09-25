@@ -205,7 +205,7 @@ apt-get install --yes unzip
 wget https://github.com/choccymalk/note-detection/archive/refs/heads/main.zip
 mkdir -p /opt/note-detection
 unzip main.zip -d /opt/note-detection
-mv -r /opt/note-detection/note-detection-main/* /opt/note-detection
+mv /opt/note-detection/note-detection-main/* /opt/note-detection
 cd $HOME/
 rm -rf $HOME/note-detection-temp
 cd /opt/note-detection/
