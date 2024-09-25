@@ -213,10 +213,17 @@ echo "Downloaded latest stable release."
 
 echo "Installing python packages..."
 /usr/bin/python3 -m venv /opt/note-detection
-source /opt/note-detection/bin/activate
-/usr/bin/pip3 install -r /opt/note-detection/requirements.txt # --break-system-packages
+cat > /opt/note-detection/installpypackages.sh <<EOF
+#!/opt/note-detection/bin/python3
+python3 -m pip install -r /opt/note-detection/requirements.txt # --break-system-packages
 #apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-flask python3-pygrabber python3-dill python3-pickle 
-deactivate
+EOF
+#source /opt/note-detection/bin/activate
+#/usr/bin/pip3 install -r /opt/note-detection/requirements.txt # --break-system-packages
+#apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-flask python3-pygrabber python3-dill python3-pickle 
+#deactivate
+chown 777 /opt/note-detection/installpypackages.sh
+/opt/note-detection/installpypackages.sh
 echo "Finished installing packages."
 
 echo "Creating systemd service..."
@@ -232,9 +239,8 @@ if systemctl --quiet is-active note-detection; then
 fi
 
 cat > /opt/note-detection/startup.sh <<EOF
-#!/bin/bash
-source /opt/note-detection/bin/activate
-/usr/bin/python3 /opt/note-detection/UDPClient.py
+#!/opt/note-detection/bin/python3
+python3 /opt/note-detection/UDPClient.py
 EOF
 
 cat > /lib/systemd/system/note-detection.service <<EOF
