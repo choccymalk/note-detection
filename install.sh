@@ -112,16 +112,27 @@ if ["$DONOTINSTALLPYTHON" = "false"]; then
   mkdir $HOME/note-detection-temp
   cd $HOME/note-detection-temp
   apt-get install --yes libssl-dev openssl
-  wget https://www.python.org/ftp/python/3.9.0/Python-3.9.0.tgz
-  tar xzvf Python-3.9.0.tgz
-  cd Python-3.9.0
-  ./configure
-  make
-  make install
+  #wget https://www.python.org/ftp/python/3.9.12/Python-3.9.12.tgz
+  #tar xzvf Python-3.9.12.tgz
+  #cd Python-3.9.12
+  #./configure
+  #make
+  #make install
+  if [ "$ARCH" = "aarch64" ]; then
+    cd $HOME/note-detection-temp
+    wget http://launchpadlibrarian.net/592814499/python3.9_3.9.12-1_arm64.deb
+    dpkg -i python3.9_3.9.12-1_arm64.deb
+    cd /opt/note-detection/
+  else
+    cd $HOME/note-detection-temp
+    wget http://launchpadlibrarian.net/592777864/python3.9_3.9.12-1_amd64.deb
+    dpkg -i python3.9_3.9.12-1_amd64.deb
+    cd /opt/note-detection/
+  fi
   cd $HOME/
   rm -rf $HOME/note-detection-temp
   echo "python3 installation complete."
-else
+else #http://launchpadlibrarian.net/592777864/python3.9_3.9.12-1_amd64.deb
   echo "Not installing python3."
 fi
 echo "installing pip3..."
@@ -212,6 +223,10 @@ echo "Downloaded latest stable release."
 #http://launchpadlibrarian.net/592777863/python3.9-venv_3.9.12-1_amd64.deb
 
 echo "Installing python packages..."
+apt-get install --yes python3-pip-whl
+apt-get install --yes python3-setuptools-whl
+wget http://launchpadlibrarian.net/590522018/python3-distutils_3.9.10-2_all.deb
+dpkg -i python3-distutils_3.9.10-2_all.deb
 if [ "$ARCH" = "aarch64" ]; then
   cd $HOME/note-detection-temp
   wget http://launchpadlibrarian.net/592814498/python3.9-venv_3.9.12-1_arm64.deb
