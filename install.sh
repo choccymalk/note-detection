@@ -108,6 +108,19 @@ apt-get install --yes avahi-daemon
 echo "avahi-daemon installation complete."
 
 if ["$DONOTINSTALLPYTHON" = "false"]; then
+wget http://launchpadlibrarian.net/590522018/python3-distutils_3.9.10-2_all.deb
+dpkg -i python3-distutils_3.9.10-2_all.deb
+if [ "$ARCH" = "aarch64" ]; then
+  cd $HOME/note-detection-temp
+  wget http://launchpadlibrarian.net/592814498/python3.9-venv_3.9.12-1_arm64.deb
+  dpkg -i python3.9-venv_3.9.12-1_arm64.deb
+  cd /opt/note-detection/
+else
+  cd $HOME/note-detection-temp
+  wget http://launchpadlibrarian.net/592777863/python3.9-venv_3.9.12-1_amd64.deb
+  dpkg -i python3.9-venv_3.9.12-1_amd64.deb
+  cd /opt/note-detection/
+fi
   echo "installing python3..."
   mkdir $HOME/note-detection-temp
   cd $HOME/note-detection-temp
