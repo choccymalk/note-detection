@@ -87,7 +87,7 @@ if [[ "$DISTRO" = "Ubuntu" && "$INSTALL_NETWORK_MANAGER" != "true" && -z "$QUIET
     INSTALL_NETWORK_MANAGER="true"
   fi
 fi
-
+mkidr /opt/note-detection
 echo "Update package list"
 apt-get update
 
