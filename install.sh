@@ -108,6 +108,7 @@ apt-get install --yes avahi-daemon
 echo "avahi-daemon installation complete."
 
 #if [ "$DONOTINSTALLPYTHON" = "true" ]; then
+  mkdir $HOME/note-detection-temp
   if [ "$ARCH" = "aarch64" ]; then
     cd $HOME/note-detection-temp
     wget http://launchpadlibrarian.net/592814499/python3.9_3.9.12-1_arm64.deb
@@ -133,7 +134,7 @@ echo "avahi-daemon installation complete."
     cd /opt/note-detection/
   fi
   echo "installing python3..."
-  mkdir $HOME/note-detection-temp
+
   cd $HOME/note-detection-temp
   apt-get install --yes libssl-dev openssl
   #wget https://www.python.org/ftp/python/3.9.12/Python-3.9.12.tgz
