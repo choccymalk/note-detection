@@ -107,7 +107,18 @@ echo "Installing avahi-daemon..."
 apt-get install --yes avahi-daemon
 echo "avahi-daemon installation complete."
 
-if ["$DONOTINSTALLPYTHON" = "true"]; then
+#if [ "$DONOTINSTALLPYTHON" = "true" ]; then
+  if [ "$ARCH" = "aarch64" ]; then
+    cd $HOME/note-detection-temp
+    wget http://launchpadlibrarian.net/592814499/python3.9_3.9.12-1_arm64.deb
+    dpkg -i python3.9_3.9.12-1_arm64.deb
+    cd /opt/note-detection/
+  else
+    cd $HOME/note-detection-temp
+    wget http://launchpadlibrarian.net/592777864/python3.9_3.9.12-1_amd64.deb
+    dpkg -i python3.9_3.9.12-1_amd64.deb
+    cd /opt/note-detection/
+  fi
   wget http://launchpadlibrarian.net/590522018/python3-distutils_3.9.10-2_all.deb
   dpkg -i python3-distutils_3.9.10-2_all.deb
   if [ "$ARCH" = "aarch64" ]; then
@@ -131,23 +142,12 @@ if ["$DONOTINSTALLPYTHON" = "true"]; then
   #./configure
   #make
   #make install
-  if [ "$ARCH" = "aarch64" ]; then
-    cd $HOME/note-detection-temp
-    wget http://launchpadlibrarian.net/592814499/python3.9_3.9.12-1_arm64.deb
-    dpkg -i python3.9_3.9.12-1_arm64.deb
-    cd /opt/note-detection/
-  else
-    cd $HOME/note-detection-temp
-    wget http://launchpadlibrarian.net/592777864/python3.9_3.9.12-1_amd64.deb
-    dpkg -i python3.9_3.9.12-1_amd64.deb
-    cd /opt/note-detection/
-  fi
   cd $HOME/
   rm -rf $HOME/note-detection-temp
   echo "python3 installation complete."
-else #http://launchpadlibrarian.net/592777864/python3.9_3.9.12-1_amd64.deb
-  echo "Not installing python3."
-fi
+#else #http://launchpadlibrarian.net/592777864/python3.9_3.9.12-1_amd64.deb
+#  echo "Not installing python3."
+#fi
 echo "installing pip3..."
 apt-get install --yes python3-pip
 echo "pip3 installation complete."
