@@ -50,5 +50,4 @@ setuptools # Snyk vulnerability fix
 flask-socketio
 pygrabber
 flask
-pickle
 dill
