@@ -1,6 +1,6 @@
 ## Installation Guide
 ### On coprocessor:
-#### Using the Installation Script (recommended)
+#### Using the Installation Script (Do Not Use, Broken)
 ```
 wget https://raw.githubusercontent.com/choccymalk/note-detection/refs/heads/main/install.sh
 ```
