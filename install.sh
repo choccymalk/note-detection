@@ -50,6 +50,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 if [ "$UPGRADE" = "true" ]; then
+  cp /opt/note-detection/config.json $HOME/note-detection-config.json
   rm -rf /opt/note-detection
 fi
 
@@ -231,12 +232,18 @@ wget https://github.com/choccymalk/note-detection/archive/refs/heads/main.zip
 mkdir -p /opt/note-detection
 unzip main.zip -d /opt/note-detection
 mv /opt/note-detection/note-detection-main/* /opt/note-detection
+if [ "$UPGRADE" = "true" ]; then
+  rm /opt/note-detection/config.json
+  cp $HOME/note-detection-config.json /opt/note-detection/config.json
+  rm $HOME/note-detection-config.json
+fi
 cd $HOME/
 cd /opt/note-detection/
 echo "Downloaded latest stable release."
 #http://launchpadlibrarian.net/592777863/python3.9-venv_3.9.12-1_amd64.deb
 
 echo "Installing python packages..."
+cd $HOME/note-detection-temp
 apt-get install --yes python3-pip-whl
 apt-get install --yes python3-setuptools-whl
 wget http://launchpadlibrarian.net/590522018/python3-distutils_3.9.10-2_all.deb
@@ -256,7 +263,7 @@ fi
 cat > /opt/note-detection/installpypackages.sh <<EOF
 #!/opt/note-detection/bin/python3
 python3 -m pip install -r /opt/note-detection/requirements.txt # --break-system-packages
-#apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-flask python3-pygrabber python3-dill python3-pickle 
+#apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-socketio python3-flask python3-pygrabber python3-dill 
 EOF
 #source /opt/note-detection/bin/activate
 #/usr/bin/pip3 install -r /opt/note-detection/requirements.txt # --break-system-packages
@@ -311,7 +318,7 @@ if [[ -n $(cat /proc/cpuinfo | grep "RK3588") ]]; then
 fi
 
 cp /lib/systemd/system/note-detection.service /etc/systemd/system/note-detection.service
-chmod 644 /etc/systemd/system/note-detection.service
+chmod 777 /etc/systemd/system/note-detection.service
 systemctl daemon-reload
 systemctl enable note-detection.service
 
