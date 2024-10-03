@@ -92,7 +92,7 @@ if [[ "$DISTRO" = "Ubuntu" && "$INSTALL_NETWORK_MANAGER" != "true" && -z "$QUIET
     INSTALL_NETWORK_MANAGER="true"
   fi
 fi
-mkidr /opt/note-detection
+mkdir /opt/note-detection
 echo "Update package list"
 apt-get update
 
@@ -120,50 +120,41 @@ if [ "$INSTALLPYTHON" = "false" ]; then
 else
   if [ "$BUILDPYTHONFROMSOURCE" = "false"]; then
     mkdir $HOME/note-detection-temp
-    if [ "$ARCH" = "aarch64" ]; then
-      cd $HOME/note-detection-temp
-      wget http://ftp.us.debian.org/debian/pool/main/p/python3.9/python3.9_3.9.2-1_arm64.deb
-      dpkg -i python3.9_3.9.201_amd64.deb
-    else
-      cd $HOME/note-detection-temp
-      wget http://ftp.us.debian.org/debian/pool/main/p/python3.9/python3.9_3.9.2-1_amd64.deb
-      dpkg -i python3.9_3.9.201_amd64.deb
-    fi
+    apt-get install --yes python3.12
   else
     cd $HOME/note-detection-temp
-    wget https://www.python.org/ftp/python/3.9.5/Python-3.9.2.tgz
-    tar xzvf Python-3.9.2.tgz
-    cd Python-3.9.2
+    wget https://www.python.org/ftp/python/3.9.5/Python-3.12.3.tgz
+    tar xzvf Python-3.12.3.tgz
+    cd Python-3.12.3
     ./configure
     make
     make install
     cd $HOME/
     rm -rf $HOME/note-detection-temp
   fi
-  wget http://ftp.us.debian.org/debian/pool/main/p/python3-stdlib-extensions/python3-distutils_3.9.2-1_all.deb
-  dpkg -i python3-distutils_3.9.2-1_all.deb
-  if [ "$ARCH" = "aarch64" ]; then
-      cd $HOME/note-detection-temp
-      wget http://ftp.us.debian.org/debian/pool/main/p/python-pip/python-pip-whl_20.3.4-4+deb11u1_all.deb
-      dpkg -i python-pip-whl_20.3.4-4+deb11u1_all.deb
-      wget http://ftp.us.debian.org/debian/pool/main/p/python3.9/python3.9-venv_3.9.2-1_arm64.deb
-      dpkg -i python3.9-venv_3.9.2-1_amd64.deb
-      cd /opt/note-detection/
-      echo "python3 installation complete."
-    else
-      cd $HOME/note-detection-temp
-      wget http://ftp.us.debian.org/debian/pool/main/p/python-pip/python-pip-whl_20.3.4-4+deb11u1_all.deb
-      dpkg -i python-pip-whl_20.3.4-4+deb11u1_all.deb
-      wget http://ftp.us.debian.org/debian/pool/main/p/python3.9/python3.9-venv_3.9.2-1_amd64.deb
-      dpkg -i python3.9-venv_3.9.2-1_amd64.deb
-      cd /opt/note-detection/
-      echo "python3 installation complete."
-  fi
+  apt-get install --yes python3-pip
+  apt-get install --yes python3-pip-whl
+  apt-get install --yes python3-venv
+  #wget http://ftp.us.debian.org/debian/pool/main/p/python3-stdlib-extensions/python3-distutils_3.9.2-1_all.deb
+  #dpkg -i python3-distutils_3.9.2-1_all.deb
+  #if [ "$ARCH" = "aarch64" ]; then
+  #    cd $HOME/note-detection-temp
+  #    wget http://ftp.us.debian.org/debian/pool/main/p/python-pip/python-pip-whl_20.3.4-4+deb11u1_all.deb
+  #    dpkg -i python-pip-whl_20.3.4-4+deb11u1_all.deb
+  #    wget http://ftp.us.debian.org/debian/pool/main/p/python3.9/python3.9-venv_3.9.2-1_arm64.deb
+  #    dpkg -i python3.9-venv_3.9.2-1_amd64.deb
+  #    cd /opt/note-detection/
+  #    echo "python3 installation complete."
+  #  else
+  #    cd $HOME/note-detection-temp
+  #    wget http://ftp.us.debian.org/debian/pool/main/p/python-pip/python-pip-whl_20.3.4-4+deb11u1_all.deb
+  #    dpkg -i python-pip-whl_20.3.4-4+deb11u1_all.deb
+  #    wget http://ftp.us.debian.org/debian/pool/main/p/python3.9/python3.9-venv_3.9.2-1_amd64.deb
+  #    dpkg -i python3.9-venv_3.9.2-1_amd64.deb
+  #    cd /opt/note-detection/
+  #    echo "python3 installation complete."
+  #fi
 fi
-
-echo "installing pip3..."
-apt-get install --yes python3-pip
-echo "pip3 installation complete."
 
 echo "Installing cpufrequtils..."
 apt-get install --yes cpufrequtils
