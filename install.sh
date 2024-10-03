@@ -1,6 +1,5 @@
 #!/bin/bash
-# borrowed from photonvision
-# i love photonvision
+# based on photonvision's installation script
 package_is_installed(){
     dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -q "ok installed"
 }
@@ -16,10 +15,13 @@ help() {
   echo "  -q        Silent install, automatically accepts all defaults. For non-interactive use."
   echo "  -u        Upgrade to most recent version."
   echo "  -p        Do not install Python. Only use if you already have Python version 3.9 installed."
+  echo "  -s        Build Python from source. Helpful if Launchpad Librarian is unreachable."
   echo
 }
 
 INSTALL_NETWORK_MANAGER="false"
+INSTALLPYTHON="true"
+BUILDPYTHONFROMSOURCE="false"
 
 while getopts ":hmnqup" name; do
   case "$name" in
@@ -33,7 +35,9 @@ while getopts ":hmnqup" name; do
       ;;
     u) UPGRADE="true"
       ;;
-    p) DONOTINSTALLPYTHON="true"
+    p) INSTALLPYTHON="false"
+      ;;
+    s) BUILDPYTHONFROMSOURCE="true"
       ;;
     \?)
       echo "Error: Invalid option -- '$OPTARG'"
@@ -108,48 +112,55 @@ echo "Installing avahi-daemon..."
 apt-get install --yes avahi-daemon
 echo "avahi-daemon installation complete."
 
-#if [ "$DONOTINSTALLPYTHON" = "true" ]; then
-  mkdir $HOME/note-detection-temp
-  if [ "$ARCH" = "aarch64" ]; then
-    cd $HOME/note-detection-temp
-    wget http://launchpadlibrarian.net/592814499/python3.9_3.9.12-1_arm64.deb
-    dpkg -i python3.9_3.9.12-1_arm64.deb
-    cd /opt/note-detection/
+echo "installing python3..."
+apt-get install --yes python3-distutils
+apt-get install --yes libssl-dev openssl
+if [ "$INSTALLPYTHON" = "false" ]; then
+  echo "Not installing python3."
+else
+  if [ "$BUILDPYTHONFROMSOURCE" = "false"]; then
+    mkdir $HOME/note-detection-temp
+    if [ "$ARCH" = "aarch64" ]; then
+      cd $HOME/note-detection-temp
+      wget http://ftp.us.debian.org/debian/pool/main/p/python3.9/python3.9_3.9.2-1_arm64.deb
+      dpkg -i python3.9_3.9.201_amd64.deb
+    else
+      cd $HOME/note-detection-temp
+      wget http://ftp.us.debian.org/debian/pool/main/p/python3.9/python3.9_3.9.2-1_amd64.deb
+      dpkg -i python3.9_3.9.201_amd64.deb
+    fi
   else
     cd $HOME/note-detection-temp
-    wget http://launchpadlibrarian.net/592777864/python3.9_3.9.12-1_amd64.deb
-    dpkg -i python3.9_3.9.12-1_amd64.deb
-    cd /opt/note-detection/
+    wget https://www.python.org/ftp/python/3.9.5/Python-3.9.2.tgz
+    tar xzvf Python-3.9.2.tgz
+    cd Python-3.9.2
+    ./configure
+    make
+    make install
+    cd $HOME/
+    rm -rf $HOME/note-detection-temp
   fi
-  wget http://launchpadlibrarian.net/590522018/python3-distutils_3.9.10-2_all.deb
-  dpkg -i python3-distutils_3.9.10-2_all.deb
+  wget http://ftp.us.debian.org/debian/pool/main/p/python3-stdlib-extensions/python3-distutils_3.9.2-1_all.deb
+  dpkg -i python3-distutils_3.9.2-1_all.deb
   if [ "$ARCH" = "aarch64" ]; then
-    cd $HOME/note-detection-temp
-    wget http://launchpadlibrarian.net/592814498/python3.9-venv_3.9.12-1_arm64.deb
-    dpkg -i python3.9-venv_3.9.12-1_arm64.deb
-    cd /opt/note-detection/
-  else
-    cd $HOME/note-detection-temp
-    wget http://launchpadlibrarian.net/592777863/python3.9-venv_3.9.12-1_amd64.deb
-    dpkg -i python3.9-venv_3.9.12-1_amd64.deb
-    cd /opt/note-detection/
+      cd $HOME/note-detection-temp
+      wget http://ftp.us.debian.org/debian/pool/main/p/python-pip/python-pip-whl_20.3.4-4+deb11u1_all.deb
+      dpkg -i python-pip-whl_20.3.4-4+deb11u1_all.deb
+      wget http://ftp.us.debian.org/debian/pool/main/p/python3.9/python3.9-venv_3.9.2-1_arm64.deb
+      dpkg -i python3.9-venv_3.9.2-1_amd64.deb
+      cd /opt/note-detection/
+      echo "python3 installation complete."
+    else
+      cd $HOME/note-detection-temp
+      wget http://ftp.us.debian.org/debian/pool/main/p/python-pip/python-pip-whl_20.3.4-4+deb11u1_all.deb
+      dpkg -i python-pip-whl_20.3.4-4+deb11u1_all.deb
+      wget http://ftp.us.debian.org/debian/pool/main/p/python3.9/python3.9-venv_3.9.2-1_amd64.deb
+      dpkg -i python3.9-venv_3.9.2-1_amd64.deb
+      cd /opt/note-detection/
+      echo "python3 installation complete."
   fi
-  echo "installing python3..."
+fi
 
-  cd $HOME/note-detection-temp
-  apt-get install --yes libssl-dev openssl
-  #wget https://www.python.org/ftp/python/3.9.12/Python-3.9.12.tgz
-  #tar xzvf Python-3.9.12.tgz
-  #cd Python-3.9.12
-  #./configure
-  #make
-  #make install
-  cd $HOME/
-  rm -rf $HOME/note-detection-temp
-  echo "python3 installation complete."
-#else #http://launchpadlibrarian.net/592777864/python3.9_3.9.12-1_amd64.deb
-#  echo "Not installing python3."
-#fi
 echo "installing pip3..."
 apt-get install --yes python3-pip
 echo "pip3 installation complete."
@@ -246,31 +257,33 @@ echo "Installing python packages..."
 cd $HOME/note-detection-temp
 apt-get install --yes python3-pip-whl
 apt-get install --yes python3-setuptools-whl
-wget http://launchpadlibrarian.net/590522018/python3-distutils_3.9.10-2_all.deb
-dpkg -i python3-distutils_3.9.10-2_all.deb
-if [ "$ARCH" = "aarch64" ]; then
-  cd $HOME/note-detection-temp
-  wget http://launchpadlibrarian.net/592814498/python3.9-venv_3.9.12-1_arm64.deb
-  dpkg -i python3.9-venv_3.9.12-1_arm64.deb
-  cd /opt/note-detection/
-else
-  cd $HOME/note-detection-temp
-  wget http://launchpadlibrarian.net/592777863/python3.9-venv_3.9.12-1_amd64.deb
-  dpkg -i python3.9-venv_3.9.12-1_amd64.deb
-  cd /opt/note-detection/
-fi
-/usr/bin/python3 -m venv /opt/note-detection
-cat > /opt/note-detection/installpypackages.sh <<EOF
-#!/opt/note-detection/bin/python3
-python3 -m pip install -r /opt/note-detection/requirements.txt # --break-system-packages
-#apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-socketio python3-flask python3-pygrabber python3-dill 
-EOF
+#wget http://launchpadlibrarian.net/590522018/python3-distutils_3.9.10-2_all.deb
+#dpkg -i python3-distutils_3.9.10-2_all.deb
+#if [ "$ARCH" = "aarch64" ]; then
+#  cd $HOME/note-detection-temp
+#  wget http://launchpadlibrarian.net/592814498/python3.9-venv_3.9.12-1_arm64.deb
+#  dpkg -i python3.9-venv_3.9.12-1_arm64.deb
+#  cd /opt/note-detection/
+#else
+#  cd $HOME/note-detection-temp
+#  wget http://launchpadlibrarian.net/592777863/python3.9-venv_3.9.12-1_amd64.deb
+#  dpkg -i python3.9-venv_3.9.12-1_amd64.deb
+#  cd /opt/note-detection/
+#fi
+cd /opt/note-detection/
+/usr/bin/python3 -m venv note-detection
+/opt/note-detection/bin/pip3 install -r /opt/note-detection/requirements.txt
+#cat > /opt/note-detection/installpypackages.sh <<EOF
+##!/opt/note-detection/bin/python3
+#python3 -m pip install -r /opt/note-detection/requirements.txt # --break-system-packages
+##apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-socketio python3-flask python3-pygrabber python3-dill 
+#EOF
 #source /opt/note-detection/bin/activate
 #/usr/bin/pip3 install -r /opt/note-detection/requirements.txt # --break-system-packages
 #apt-get install --yes python3-gitpython python3-matplotlib python3-numpy python3-opencv-python python3-pillow python3-psutil python3-PyYAML python3-requests python3-scipy python3-thop python3-torch python3-torchvision python3-tqdm python3-ultralytics python3-pandas python3-seaborn python3-setuptools python3-flask-socketio python3-flask python3-pygrabber python3-dill python3-pickle 
 #deactivate
-chmod 777 /opt/note-detection/installpypackages.sh
-/opt/note-detection/installpypackages.sh
+#chmod 777 /opt/note-detection/installpypackages.sh
+#/opt/note-detection/installpypackages.sh
 echo "Finished installing packages."
 
 echo "Creating systemd service..."
@@ -285,10 +298,11 @@ if systemctl --quiet is-active note-detection; then
   systemctl reset-failed
 fi
 
-cat > /opt/note-detection/startup.sh <<EOF
-#!/opt/note-detection/bin/python3
-python3 /opt/note-detection/UDPClient.py
-EOF
+#cat > /opt/note-detection/startup.sh <<EOF
+##!/bin/bash
+#/opt/note-detection/bin/python3 /opt/note-detection/UDPClient.py
+#EOF
+#chmod 777 /opt/note-detection/startup.sh
 
 cat > /lib/systemd/system/note-detection.service <<EOF
 [Unit]
@@ -302,7 +316,7 @@ Nice=-10
 # look up the right values for your CPU
 # AllowedCPUs=4-7
 
-ExecStart=/opt/note-detection/startup.sh
+ExecStart=/opt/note-detection/bin/python3 /opt/note-detection/UDPClient.py
 ExecStop=/bin/systemctl kill note-detection
 Type=simple
 Restart=on-failure
