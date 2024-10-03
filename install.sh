@@ -263,7 +263,7 @@ apt-get install --yes python3-setuptools-whl
 #fi
 cd /opt/note-detection/
 /usr/bin/python3 -m venv note-detection
-/opt/note-detection/bin/pip3 install -r /opt/note-detection/requirements.txt
+/opt/note-detection/note-detection/bin/pip3 install -r /opt/note-detection/requirements.txt
 #cat > /opt/note-detection/installpypackages.sh <<EOF
 ##!/opt/note-detection/bin/python3
 #python3 -m pip install -r /opt/note-detection/requirements.txt # --break-system-packages
@@ -307,7 +307,7 @@ Nice=-10
 # look up the right values for your CPU
 # AllowedCPUs=4-7
 
-ExecStart=/opt/note-detection/bin/python3 /opt/note-detection/UDPClient.py
+ExecStart=/opt/note-detection/note-detection/bin/python3 /opt/note-detection/UDPClient.py
 ExecStop=/bin/systemctl kill note-detection
 Type=simple
 Restart=on-failure
