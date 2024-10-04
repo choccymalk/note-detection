@@ -262,10 +262,10 @@ apt-get install --yes python3-setuptools-whl
 #  cd /opt/note-detection/
 #fi
 cd /opt/note-detection/
-su - $SUDO_USER -c source /opt/note-detection/note-detection/bin/activate
-su - $SUDO_USER -c python3 -m venv note-detection
-su - $SUDO_USER -c /opt/note-detection/note-detection/bin/pip3 install -r /opt/note-detection/requirements.txt
-su - $SUDO_USER -c deactivate
+su - $SUDO_USER -c "source /opt/note-detection/note-detection/bin/activate"
+su - $SUDO_USER -c "python3 -m venv note-detection"
+su - $SUDO_USER -c "/opt/note-detection/note-detection/bin/pip3 install -r /opt/note-detection/requirements.txt"
+su - $SUDO_USER -c "deactivate"
 #cat > /opt/note-detection/installpypackages.sh <<EOF
 ##!/opt/note-detection/bin/python3
 #python3 -m pip install -r /opt/note-detection/requirements.txt # --break-system-packages
