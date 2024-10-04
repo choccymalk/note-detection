@@ -261,7 +261,7 @@ apt-get install --yes python3-setuptools-whl
 #  dpkg -i python3.9-venv_3.9.12-1_amd64.deb
 #  cd /opt/note-detection/
 #fi
-cd /opt/note-detection/
+su - $SUDO_USER -c " cd /opt/note-detection/"
 su - $SUDO_USER -c "python3 -m venv note-detection"
 su - $SUDO_USER -c "source /opt/note-detection/note-detection/bin/activate"
 su - $SUDO_USER -c "/opt/note-detection/note-detection/bin/pip3 install -r /opt/note-detection/requirements.txt"
