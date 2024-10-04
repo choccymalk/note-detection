@@ -123,7 +123,7 @@ else
     apt-get install --yes python3.12
   else
     cd $HOME/note-detection-temp
-    wget https://www.python.org/ftp/python/3.9.5/Python-3.12.3.tgz
+    wget https://www.python.org/ftp/python/3.12.3/Python-3.12.3.tgz
     tar xzvf Python-3.12.3.tgz
     cd Python-3.12.3
     ./configure
