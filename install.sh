@@ -8,13 +8,13 @@ help() {
   echo "This script installs the note-detection utility."
   echo "It must be run as root."
   echo
-  echo "Syntax: sudo ./install.sh [-h|m|n|q]"
+  echo "Syntax: sudo ./install.sh [-h|m|n|q|u|p|s]"
   echo "  options:"
   echo "  -h        Display this help message."
   echo "  -m        Install and configure NetworkManager (Ubuntu only)."
   echo "  -q        Silent install, automatically accepts all defaults. For non-interactive use."
   echo "  -u        Upgrade to most recent version."
-  echo "  -p        Do not install Python. Only use if you already have Python version 3.9 installed."
+  echo "  -p        Do not install Python. Only use if you already have Python version 3.12 installed."
   echo "  -s        Build Python from source. Helpful if Launchpad Librarian is unreachable."
   echo
 }
@@ -23,7 +23,7 @@ INSTALL_NETWORK_MANAGER="false"
 INSTALLPYTHON="true"
 BUILDPYTHONFROMSOURCE="false"
 
-while getopts ":hmnqup" name; do
+while getopts ":hmnqups" name; do
   case "$name" in
     h)
       help
@@ -119,7 +119,7 @@ if [ "$INSTALLPYTHON" = "false" ]; then
   echo "Not installing python3."
 else
   if [ "$BUILDPYTHONFROMSOURCE" = "false"]; then
-    mkdir $HOME/note-detection-temp
+    #mkdir $HOME/note-detection-temp
     apt-get install --yes python3.12
   else
     cd $HOME/note-detection-temp
@@ -262,8 +262,10 @@ apt-get install --yes python3-setuptools-whl
 #  cd /opt/note-detection/
 #fi
 cd /opt/note-detection/
-/usr/bin/python3 -m venv note-detection
-/opt/note-detection/note-detection/bin/pip3 install -r /opt/note-detection/requirements.txt
+su - $SUDO_USER -c source /opt/note-detection/note-detection/bin/activate
+su - $SUDO_USER -c python3 -m venv note-detection
+su - $SUDO_USER -c /opt/note-detection/note-detection/bin/pip3 install -r /opt/note-detection/requirements.txt
+su - $SUDO_USER -c deactivate
 #cat > /opt/note-detection/installpypackages.sh <<EOF
 ##!/opt/note-detection/bin/python3
 #python3 -m pip install -r /opt/note-detection/requirements.txt # --break-system-packages
@@ -295,6 +297,7 @@ fi
 #EOF
 #chmod 777 /opt/note-detection/startup.sh
 
+#/opt/note-detection/note-detection/bin/python3 /opt/note-detection/UDPClient.py
 cat > /lib/systemd/system/note-detection.service <<EOF
 [Unit]
 Description=Service that runs the note-detection utility
@@ -307,7 +310,7 @@ Nice=-10
 # look up the right values for your CPU
 # AllowedCPUs=4-7
 
-ExecStart=/opt/note-detection/note-detection/bin/python3 /opt/note-detection/UDPClient.py
+ExecStart=/bin/bash -c 'source /opt/note-detection/note-detection/bin/activate && python3 /opt/note-detection/UDPClient.py'
 ExecStop=/bin/systemctl kill note-detection
 Type=simple
 Restart=on-failure
@@ -330,4 +333,7 @@ systemctl enable note-detection.service
 echo "Created systemd service."
 rm -rf $HOME/note-detection-temp
 echo "Installation successful!"
-echo "Please restart your device."
+read -p "Would you like to restart your device now? [y/N]: " response
+if [[ $response == [yY] || $response == [yY][eE][sS] ]]; then
+  reboot now
+fi
