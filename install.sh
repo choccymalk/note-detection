@@ -261,10 +261,10 @@ apt-get install --yes python3-setuptools-whl
 #  dpkg -i python3.9-venv_3.9.12-1_amd64.deb
 #  cd /opt/note-detection/
 #fi
-su - $SUDO_USER -c " cd /opt/note-detection/"
-su - $SUDO_USER -c "python3 -m venv note-detection"
-su - $SUDO_USER -c "source /opt/note-detection/note-detection/bin/activate"
-su - $SUDO_USER -c "/opt/note-detection/note-detection/bin/pip3 install -r /opt/note-detection/requirements.txt"
+su - $SUDO_USER -c "cd /opt/note-detection/"
+su - $SUDO_USER -c "python3 -m venv /opt/note-detection/note-detection-env"
+su - $SUDO_USER -c "source /opt/note-detection/note-detection-env/bin/activate"
+su - $SUDO_USER -c "/opt/note-detection/note-detection-env/bin/pip3 install -r /opt/note-detection/requirements.txt"
 su - $SUDO_USER -c "deactivate"
 #cat > /opt/note-detection/installpypackages.sh <<EOF
 ##!/opt/note-detection/bin/python3
@@ -310,7 +310,7 @@ Nice=-10
 # look up the right values for your CPU
 # AllowedCPUs=4-7
 
-ExecStart=/bin/bash -c 'source /opt/note-detection/note-detection/bin/activate && python3 /opt/note-detection/UDPClient.py'
+ExecStart=/bin/bash -c 'source /opt/note-detection/note-detection-env/bin/activate && python3 /opt/note-detection/UDPClient.py'
 ExecStop=/bin/systemctl kill note-detection
 Type=simple
 Restart=on-failure
