@@ -234,6 +234,7 @@ wget https://github.com/choccymalk/note-detection/archive/refs/heads/main.zip
 mkdir -p /opt/note-detection
 unzip main.zip -d /opt/note-detection
 mv /opt/note-detection/note-detection-main/* /opt/note-detection
+rm -rf /opt/note-detection/note-detection-main
 if [ "$UPGRADE" = "true" ]; then
   rm /opt/note-detection/config.json
   cp $HOME/note-detection-config.json /opt/note-detection/config.json
@@ -261,11 +262,15 @@ apt-get install --yes python3-setuptools-whl
 #  dpkg -i python3.9-venv_3.9.12-1_amd64.deb
 #  cd /opt/note-detection/
 #fi
-su - $SUDO_USER -c "cd /opt/note-detection/"
-su - $SUDO_USER -c "python3 -m venv /opt/note-detection/note-detection-env"
-su - $SUDO_USER -c "source /opt/note-detection/note-detection-env/bin/activate"
-su - $SUDO_USER -c "/opt/note-detection/note-detection-env/bin/pip3 install -r /opt/note-detection/requirements.txt"
-su - $SUDO_USER -c "deactivate"
+
+#su - $SUDO_USER -c "cd /opt/note-detection/"
+#su - $SUDO_USER -c "python3 -m venv /opt/note-detection/note-detection-env"
+#su - $SUDO_USER -c "source /opt/note-detection/note-detection-env/bin/activate"
+#su - $SUDO_USER -c "pip3 install -r /opt/note-detection/requirements.txt"
+#su - $SUDO_USER -c "deactivate"
+
+/bin/bash -c "cd /opt/note-detection && python3 -m venv /opt/note-detection/note-detection-env && source /opt/note-detection/note-detection-env/bin/activate && pip3 install -r /opt/note-detection/requirements.txt && deactivate"
+
 #cat > /opt/note-detection/installpypackages.sh <<EOF
 ##!/opt/note-detection/bin/python3
 #python3 -m pip install -r /opt/note-detection/requirements.txt # --break-system-packages
