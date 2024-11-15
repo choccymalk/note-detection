@@ -246,9 +246,6 @@ echo "Downloaded latest stable release."
 #http://launchpadlibrarian.net/592777863/python3.9-venv_3.9.12-1_amd64.deb
 
 echo "Installing python packages..."
-cd $HOME/note-detection-temp
-apt-get install --yes python3-pip-whl
-apt-get install --yes python3-setuptools-whl
 #wget http://launchpadlibrarian.net/590522018/python3-distutils_3.9.10-2_all.deb
 #dpkg -i python3-distutils_3.9.10-2_all.deb
 #if [ "$ARCH" = "aarch64" ]; then
@@ -269,7 +266,11 @@ apt-get install --yes python3-setuptools-whl
 #su - $SUDO_USER -c "pip3 install -r /opt/note-detection/requirements.txt"
 #su - $SUDO_USER -c "deactivate"
 
-/bin/bash -c "cd /opt/note-detection && python3 -m venv /opt/note-detection/note-detection-env && source /opt/note-detection/note-detection-env/bin/activate && pip3 install -r /opt/note-detection/requirements.txt && deactivate"
+/bin/bash -c "cd /opt/note-detection"
+/bin/bash -c "python3 -m venv /opt/note-detection/note-detection-env"
+/bin/bash -c "source /opt/note-detection/note-detection-env/bin/activate"
+/bin/bash -c "pip3 install -r /opt/note-detection/requirements.txt"
+/bin/bash -c "deactivate"
 
 #cat > /opt/note-detection/installpypackages.sh <<EOF
 ##!/opt/note-detection/bin/python3
@@ -285,16 +286,6 @@ apt-get install --yes python3-setuptools-whl
 echo "Finished installing packages."
 
 echo "Creating systemd service..."
-
-if systemctl --quiet is-active note-detection; then
-  echo "The service is already running! Stopping it."
-  systemctl stop note-detection
-  systemctl disable note-detection
-  rm /lib/systemd/system/note-detection.service
-  rm /etc/systemd/system/note-detection.service
-  systemctl daemon-reload
-  systemctl reset-failed
-fi
 
 #cat > /opt/note-detection/startup.sh <<EOF
 ##!/bin/bash
@@ -325,8 +316,18 @@ RestartSec=1
 WantedBy=multi-user.target
 EOF
 
+if systemctl --quiet is-active note-detection; then
+  echo "The service is already running! Stopping it."
+  systemctl stop note-detection
+  systemctl disable note-detection
+  rm /lib/systemd/system/note-detection.service
+  rm /etc/systemd/system/note-detection.service
+  systemctl daemon-reload
+  systemctl reset-failed
+fi
+
 if [[ -n $(cat /proc/cpuinfo | grep "RK3588") ]]; then
-  echo "This has a Rockchip RK3588, enabling all cores"
+  echo "RK3588 detected, enabling all cores"
   sed -i 's/# AllowedCPUs=4-7/AllowedCPUs=0-7/g' /lib/systemd/system/note-detection.service
 fi
 
