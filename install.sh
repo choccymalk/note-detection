@@ -18,7 +18,10 @@ help() {
   echo "  -s        Build Python from source. Helpful if Launchpad Librarian is unreachable."
   echo
 }
-
+read -p "This script is currently broken! It will break your packages! Continue? [y/N]: " response
+if [[ $response == [nN] || $response == [oO] ]]; then
+  exit 0
+fi
 INSTALL_NETWORK_MANAGER="false"
 INSTALLPYTHON="true"
 BUILDPYTHONFROMSOURCE="false"
