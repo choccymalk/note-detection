@@ -32,8 +32,21 @@ def load_labels(path):
         return {i: line.strip() for i, line in enumerate(f.readlines())}
 
 def get_available_cameras():
-    devices = FilterGraph().get_input_devices()
-    return [(index, name) for index, name in enumerate(devices)]
+    """Get available camera devices on Linux."""
+    available_cameras = []
+    # Check the first 10 camera device nodes
+    for i in range(10):
+        cap = cv2.VideoCapture(i)
+        if cap.isOpened():
+            # Test reading a frame
+            ret, _ = cap.read()
+            if ret:
+                # On Linux, we can try to get the camera name from v4l2
+                # but for simplicity, we'll just use indices
+                available_cameras.append((i, f"Camera {i}"))
+            cap.release()
+    return available_cameras
+
 
 def load_config():
     with open(CONFIG_FILE, 'r') as file:
