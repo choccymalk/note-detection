@@ -22,7 +22,7 @@ if not os.path.exists(CONFIG_FILE):
 SETTING1_OPTIONS = ["option1", "option2", "option3", "option4"]
 
 # Model settings
-MODEL_PATH = 'coral_model.tflite'
+MODEL_PATH = 'note_detect_v2-fp16_edgetpu.tflite'
 LABELS_PATH = 'labels.txt'
 INPUT_SIZE = 320  # Must match your model's input size
 
