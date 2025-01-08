@@ -6,7 +6,6 @@ import cv2
 import numpy as np
 from tflite_runtime.interpreter import Interpreter
 from tflite_runtime.interpreter import load_delegate
-from pygrabber.dshow_graph import FilterGraph
 from flask_socketio import SocketIO, emit
 import socket
 
