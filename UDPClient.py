@@ -75,9 +75,29 @@ def update_config():
 
 def run_detection():
     # Initialize Edge TPU with delegate
+    possible_paths = [
+            '/usr/lib/libedgetpu.so.1.0',
+            '/usr/lib/aarch64-linux-gnu/libedgetpu.so.1.0',  # Common path on ARM64
+            'libedgetpu.so.1.0'
+        ]
+        
+    delegate = None
+    for path in possible_paths:
+        try:
+            print(f"Attempting to load Edge TPU delegate from: {path}")
+            delegate = load_delegate(path)
+            print(f"Successfully loaded delegate from {path}")
+            break
+        except ValueError as e:
+            print(f"Failed to load from {path}: {e}")
+            continue
+                
+    if delegate is None:
+        raise ValueError("Could not load EdgeTPU delegate from any known path")
+    
     interpreter = Interpreter(
         model_path=MODEL_PATH,
-        experimental_delegates=[load_delegate('libedgetpu.so.1.0')]
+        experimental_delegates=[delegate]
     )
     interpreter.allocate_tensors()
 
