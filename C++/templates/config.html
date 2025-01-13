@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detection Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #videoFeed {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 640px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Detection Configuration</h1>
+    <form action="/update_config" method="POST">
+        <div class="form-group">
+            <label for="ipOfRio">RIO IP Address:</label>
+            <input type="text" id="ipOfRio" name="ipOfRio" value="{{config.ipOfRio}}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="camera_index">Camera:</label>
+            <select id="camera_index" name="camera_index">
+                {{available_cameras}}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="setting1">Setting 1:</label>
+            <select id="setting1" name="setting1">
+                {{setting1_options}}
+            </select>
+        </div>
+        
+        <button type="submit">Save Configuration</button>
+    </form>
+
+    <div id="videoFeed">
+        <h2>Live Feed</h2>
+        <img id="video" src="" alt="Video feed unavailable">
+    </div>
+
+    <script>
+        // WebSocket connection for video feed
+        const ws = new WebSocket(`ws://${window.location.host}/ws`);
+        const videoElement = document.getElementById('video');
+
+        ws.onmessage = function(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                videoElement.src = reader.result;
+            }
+            reader.readAsDataURL(event.data);
+        };
+    </script>
+</body>
+</html>
