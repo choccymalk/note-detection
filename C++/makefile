@@ -58,12 +58,15 @@ install-deps:
 		cmake \
 		libopencv-dev \
 		libboost-all-dev \
-		python3-pip
+		python3-pip \
+		libasio-dev
 	pip3 install tensorflow
 	# Install Edge TPU runtime
-	wget https://github.com/google-coral/libedgetpu/releases/download/release-grouper/edgetpu_runtime_20221024.deb
-	sudo dpkg -i edgetpu_runtime_20221024.deb
-	rm edgetpu_runtime_20221024.deb
+	wget https://github.com/google-coral/libedgetpu/releases/download/release-grouper/edgetpu_runtime_20221024.zip
+	unzip edgetpu_runtime_20221024.zip
+	cd edgetpu_runtime
+	sudo ./install.sh
+	cd ../
 	# Install Crow (from source)
 	git clone https://github.com/CrowCpp/Crow.git
 	cd Crow && mkdir build && cd build && cmake .. && make && sudo make install
